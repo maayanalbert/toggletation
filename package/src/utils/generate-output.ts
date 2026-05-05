@@ -54,14 +54,15 @@ export function generateOutput(
   output += "\n";
 
   annotations.forEach((a, i) => {
+    const kindLabel = a.kind === "variant" ? "[Variant] " : "";
     if (detailLevel === "compact") {
-      output += `${i + 1}. **${a.element}**${a.sourceFile ? ` (${a.sourceFile})` : ""}: ${a.comment}`;
+      output += `${i + 1}. **${kindLabel}${a.element}**${a.sourceFile ? ` (${a.sourceFile})` : ""}: ${a.comment}`;
       if (a.selectedText) {
         output += ` (re: "${a.selectedText.slice(0, 30)}${a.selectedText.length > 30 ? "..." : ""}")`;
       }
       output += "\n";
     } else if (detailLevel === "forensic") {
-      output += `### ${i + 1}. ${a.element}\n`;
+      output += `### ${i + 1}. ${kindLabel}${a.element}\n`;
       if (a.isMultiSelect && a.fullPath) {
         output += `*Forensic data shown for first element of selection*\n`;
       }
@@ -99,7 +100,7 @@ export function generateOutput(
       output += `**Feedback:** ${a.comment}\n\n`;
     } else {
       // standard and detailed
-      output += `### ${i + 1}. ${a.element}\n`;
+      output += `### ${i + 1}. ${kindLabel}${a.element}\n`;
       output += `**Location:** ${a.elementPath}\n`;
       if (a.sourceFile) {
         output += `**Source:** ${a.sourceFile}\n`;

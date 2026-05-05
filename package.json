@@ -1,9 +1,9 @@
 {
-  "name": "agentation-monorepo",
-  "version": "0.0.1",
-  "private": true,
+  "name": "toggletation",
+  "version": "1.0.0",
   "scripts": {
     "dev": "pnpm --filter agentation watch & pnpm --filter feedback-tool-example dev",
+    "dev:simple": "pnpm --filter agentation watch & pnpm --filter agentation-simple-react dev",
     "build": "pnpm --filter agentation build",
     "example": "pnpm --filter feedback-tool-example dev",
     "pack": "cd package && pnpm pack",

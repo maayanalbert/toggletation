@@ -31,7 +31,7 @@ export type Annotation = {
   }>; // Individual bounding boxes for multi-select hover highlighting
 
   // Annotation kind (defaults to "feedback" when undefined — backward compat)
-  kind?: "feedback" | "placement" | "rearrange";
+  kind?: "feedback" | "variant" | "placement" | "rearrange";
 
   // Structured data for placement annotations
   placement?: {

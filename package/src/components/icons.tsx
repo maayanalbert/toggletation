@@ -1071,3 +1071,81 @@ export const IconLayout = ({ size = 24 }: { size?: number }) => (
     />
   </svg>
 );
+
+// Layers icon for variants mode
+export const IconLayers = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 4.75L20 8.75L12 12.75L4 8.75L12 4.75Z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M6.5 11L12 14.25L17.5 11"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M6.5 14.25L12 17.5L17.5 14.25"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+// Toggle icon for variant annotation mode
+export const IconVariantToggle = ({
+  size = 24,
+  isActive = false,
+}: {
+  size?: number;
+  isActive?: boolean;
+}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <rect
+      x="4"
+      y="8"
+      width="16"
+      height="8"
+      rx="4"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    />
+    <circle
+      cx={isActive ? 15.25 : 8.75}
+      cy="12"
+      r="2.25"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+// Clown icon for mock mode
+export const IconClown = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="5.75" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="6.5" cy="10.5" r="1.75" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="17.5" cy="10.5" r="1.75" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="10.25" cy="11.5" r="0.75" fill="currentColor" />
+    <circle cx="13.75" cy="11.5" r="0.75" fill="currentColor" />
+    <circle cx="12" cy="13.5" r="1" stroke="currentColor" strokeWidth="1.5" />
+    <path
+      d="M9.5 16C10.1 16.8 11 17.25 12 17.25C13 17.25 13.9 16.8 14.5 16"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M9.25 6.25L10.5 4.75M14.75 6.25L13.5 4.75"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
