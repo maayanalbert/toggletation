@@ -3177,6 +3177,7 @@ export function PageFeedbackToolbarCSS({
       if (endpoint) {
         updateAnnotationOnServer(endpoint, editingAnnotation.id, {
           comment: newComment,
+          kind: editingAnnotation.kind,
         }).catch((error) => {
           console.warn(
             "[Agentation] Failed to update annotation on server:",
@@ -5221,6 +5222,15 @@ Reuse as many existing components as possible when implementing your variants. F
                 computedStyles={parseComputedStylesString(
                   editingAnnotation.computedStyles,
                 )}
+                showVariantToggle
+                isVariant={editingAnnotation.kind === "variant"}
+                onVariantChange={(isVariant) => {
+                  setEditingAnnotation((prev) =>
+                    prev
+                      ? { ...prev, kind: isVariant ? "variant" : "feedback" }
+                      : prev,
+                  );
+                }}
                 placeholder="Edit your feedback..."
                 initialValue={editingAnnotation.comment}
                 submitLabel="Save"
