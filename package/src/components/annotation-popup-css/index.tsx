@@ -45,6 +45,12 @@ export interface AnnotationPopupCSSProps {
   onSubmit: (text: string) => void;
   /** Called when popup is cancelled/dismissed */
   onCancel: () => void;
+  /** Optional: show a per-note variant toggle (pending-add only) */
+  showVariantToggle?: boolean;
+  /** Optional: whether variant mode is enabled for this pending note */
+  isVariant?: boolean;
+  /** Optional: called when variant toggle changes */
+  onVariantChange?: (isVariant: boolean) => void;
   /** Called when delete button is clicked (only shown if provided) */
   onDelete?: () => void;
   /** Position styles (left, top) */
@@ -79,6 +85,9 @@ export const AnnotationPopupCSS = forwardRef<AnnotationPopupCSSHandle, Annotatio
       submitLabel = "Add",
       onSubmit,
       onCancel,
+      showVariantToggle = false,
+      isVariant = false,
+      onVariantChange,
       onDelete,
       style,
       accentColor = "#3c82f7",
@@ -275,6 +284,30 @@ export const AnnotationPopupCSS = forwardRef<AnnotationPopupCSSHandle, Annotatio
               <button className={styles.deleteButton} onClick={onDelete} type="button">
                 <IconTrash size={22} />
               </button>
+            </div>
+          )}
+          {showVariantToggle && (
+            <div className={styles.variantWrapper}>
+              <label className={styles.variantToggle} aria-label="Variant mode">
+                <input
+                  className={styles.variantInput}
+                  type="checkbox"
+                  checked={isVariant}
+                  onChange={(e) => onVariantChange?.(e.target.checked)}
+                />
+                <span
+                  className={styles.variantSwitch}
+                  aria-hidden="true"
+                  style={{
+                    ["--variant-accent" as any]: accentColor,
+                  }}
+                />
+                <span
+                  className={styles.variantLabel}
+                >
+                  Variant
+                </span>
+              </label>
             </div>
           )}
           <button className={styles.cancel} onClick={handleCancel}>

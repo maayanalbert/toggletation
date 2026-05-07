@@ -26,8 +26,6 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconLayout,
-  IconVariantToggle,
-  IconClown,
 } from "../icons";
 import { HelpTooltip } from "../help-tooltip";
 import { DesignMode } from "../design-mode";
@@ -2939,90 +2937,98 @@ export function PageFeedbackToolbarCSS({
     targetElement?: HTMLElement,
     clickPoint?: { clientX: number; clientY: number },
   ) {
-      const selectorElement = document.querySelector(
-        mockModeSelector,
-      ) as HTMLElement | null;
-      const centerElement = deepElementFromPoint(
-        window.innerWidth / 2,
-        window.innerHeight / 2,
-      );
-      const element = targetElement || selectorElement || centerElement || document.body;
+    const selectorElement = document.querySelector(
+      mockModeSelector,
+    ) as HTMLElement | null;
+    const centerElement = deepElementFromPoint(
+      window.innerWidth / 2,
+      window.innerHeight / 2,
+    );
+    const element =
+      targetElement || selectorElement || centerElement || document.body;
 
-      const rect = element.getBoundingClientRect();
-      const { name, path, reactComponents } = identifyElementWithReact(
-        element,
-        effectiveReactMode,
-      );
-      const sourceFile = detectSourceFile(element);
-      const comment = (mockModePrompt || "").trim() || buildDefaultMockPrompt(name);
-      const clientX = clickPoint?.clientX ?? rect.left + rect.width / 2;
-      const clientY = clickPoint?.clientY ?? rect.top + rect.height / 2;
+    const rect = element.getBoundingClientRect();
+    const { name, path, reactComponents } = identifyElementWithReact(
+      element,
+      effectiveReactMode,
+    );
+    const sourceFile = detectSourceFile(element);
+    const comment =
+      (mockModePrompt || "").trim() || buildDefaultMockPrompt(name);
+    const clientX = clickPoint?.clientX ?? rect.left + rect.width / 2;
+    const clientY = clickPoint?.clientY ?? rect.top + rect.height / 2;
 
-      const newAnnotation: Annotation = {
-        id: Date.now().toString(),
-        x: (clientX / window.innerWidth) * 100,
-        y: clientY + window.scrollY,
-        comment,
-        element: name,
-        elementPath: path,
-        timestamp: Date.now(),
-        boundingBox: {
-          x: rect.left,
-          y: rect.top + window.scrollY,
-          width: rect.width,
-          height: rect.height,
-        },
-        nearbyText: getNearbyText(element),
-        cssClasses: getElementClasses(element),
-        fullPath: getFullElementPath(element),
-        accessibility: getAccessibilityInfo(element),
-        computedStyles: getForensicComputedStyles(element),
-        nearbyElements: getNearbyElements(element),
-        reactComponents: reactComponents ?? undefined,
-        sourceFile,
-        kind: "feedback",
-        ...(endpoint && currentSessionId
-          ? {
-              sessionId: currentSessionId,
-              url: typeof window !== "undefined" ? window.location.href : undefined,
-              status: "pending" as const,
-            }
-          : {}),
-      };
+    const newAnnotation: Annotation = {
+      id: Date.now().toString(),
+      x: (clientX / window.innerWidth) * 100,
+      y: clientY + window.scrollY,
+      comment,
+      element: name,
+      elementPath: path,
+      timestamp: Date.now(),
+      boundingBox: {
+        x: rect.left,
+        y: rect.top + window.scrollY,
+        width: rect.width,
+        height: rect.height,
+      },
+      nearbyText: getNearbyText(element),
+      cssClasses: getElementClasses(element),
+      fullPath: getFullElementPath(element),
+      accessibility: getAccessibilityInfo(element),
+      computedStyles: getForensicComputedStyles(element),
+      nearbyElements: getNearbyElements(element),
+      reactComponents: reactComponents ?? undefined,
+      sourceFile,
+      kind: "feedback",
+      ...(endpoint && currentSessionId
+        ? {
+            sessionId: currentSessionId,
+            url:
+              typeof window !== "undefined" ? window.location.href : undefined,
+            status: "pending" as const,
+          }
+        : {}),
+    };
 
-      setAnnotations((prev) => [...prev, newAnnotation]);
-      recentlyAddedIdRef.current = newAnnotation.id;
-      originalSetTimeout(() => {
-        recentlyAddedIdRef.current = null;
-      }, 300);
-      originalSetTimeout(() => {
-        setAnimatedMarkers((prev) => new Set(prev).add(newAnnotation.id));
-      }, 250);
+    setAnnotations((prev) => [...prev, newAnnotation]);
+    recentlyAddedIdRef.current = newAnnotation.id;
+    originalSetTimeout(() => {
+      recentlyAddedIdRef.current = null;
+    }, 300);
+    originalSetTimeout(() => {
+      setAnimatedMarkers((prev) => new Set(prev).add(newAnnotation.id));
+    }, 250);
 
-      onAnnotationAdd?.(newAnnotation);
-      fireWebhook("annotation.add", { annotation: newAnnotation });
+    onAnnotationAdd?.(newAnnotation);
+    fireWebhook("annotation.add", { annotation: newAnnotation });
 
-      if (endpoint && currentSessionId) {
-        syncAnnotation(endpoint, currentSessionId, newAnnotation)
-          .then((serverAnnotation) => {
-            if (serverAnnotation.id !== newAnnotation.id) {
-              setAnnotations((prev) =>
-                prev.map((a) =>
-                  a.id === newAnnotation.id ? { ...a, id: serverAnnotation.id } : a,
-                ),
-              );
-              setAnimatedMarkers((prev) => {
-                const next = new Set(prev);
-                next.delete(newAnnotation.id);
-                next.add(serverAnnotation.id);
-                return next;
-              });
-            }
-          })
-          .catch((error) => {
-            console.warn("[Agentation] Failed to sync mock mode annotation:", error);
-          });
-      }
+    if (endpoint && currentSessionId) {
+      syncAnnotation(endpoint, currentSessionId, newAnnotation)
+        .then((serverAnnotation) => {
+          if (serverAnnotation.id !== newAnnotation.id) {
+            setAnnotations((prev) =>
+              prev.map((a) =>
+                a.id === newAnnotation.id
+                  ? { ...a, id: serverAnnotation.id }
+                  : a,
+              ),
+            );
+            setAnimatedMarkers((prev) => {
+              const next = new Set(prev);
+              next.delete(newAnnotation.id);
+              next.add(serverAnnotation.id);
+              return next;
+            });
+          }
+        })
+        .catch((error) => {
+          console.warn(
+            "[Agentation] Failed to sync mock mode annotation:",
+            error,
+          );
+        });
+    }
   }
 
   // Cancel annotation with exit animation
@@ -3336,7 +3342,12 @@ export function PageFeedbackToolbarCSS({
         output +=
           `\n---\n` +
           `\n## Variant Generation Prompt\n` +
-          `Create multiple implementation variants for each request marked as a variant. For every variant annotation, implement 3 different options in place. Then create a sidebar (not a floating modal, a collabsable sidebar that does NOT float over the app but is placed beside it to the right with the id "toggletation-variants" where you put a toggle to toggle between the different variants. Make the styling of the sidebar modern, streamlined, and nice, with all of the toggle options on a horizontal row`;
+          `Create multiple implementation variants for each request marked as a variant. For every variant annotation, implement 3-5 different options in place. Then:
+
+1. Add to the global context, ToggleContext, a state for which variant is selected (if no global context exists yet, create it)
+2. Add a new toggle to the toggle sidebar. If not sidebar exists, create it. This should be a flex sibling to the main content (not fixed/absolute) and full height. It animates its width to collapse/expand (not height, not visibility). The content should fade in and out of opacity when collapsing/expanding. Collapsed shows only a toggle arrow button. Expanded shows: tab buttons or selectable dropdown to select a variant. For each set of buttons/selectable, there should be a chevron to expand downward and show a short paragraph about the tradeoffs of the currently selected option.
+
+Reuse as many existing components as possible when implementing your variants. For the sidebar, use the app's styleguide and component library. `;
       }
     }
 
@@ -4125,55 +4136,6 @@ export function PageFeedbackToolbarCSS({
                 <span className={styles.shortcut}>L</span>
               </span>
             </div>
-
-            <div className={styles.buttonWrapper}>
-              <button
-                className={`${styles.controlButton} ${!isDarkMode ? styles.light : ""}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  hideTooltipsUntilMouseLeave();
-                  setAnnotationCaptureMode((prev) =>
-                    prev === "variant" ? "feedback" : "variant",
-                  );
-                }}
-                data-active={annotationCaptureMode === "variant"}
-                title={
-                  annotationCaptureMode === "variant"
-                    ? "Variant annotations enabled"
-                    : "Enable variant annotations"
-                }
-              >
-                <IconVariantToggle
-                  size={21}
-                  isActive={annotationCaptureMode === "variant"}
-                />
-              </button>
-              <span className={styles.buttonTooltip}>
-                {annotationCaptureMode === "variant"
-                  ? "Variant annotation mode"
-                  : "Enable variant mode"}
-              </span>
-            </div>
-
-            {enableMockMode || mockModePrompt ? (
-              <div className={styles.buttonWrapper}>
-                <button
-                  className={`${styles.controlButton} ${!isDarkMode ? styles.light : ""}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    hideTooltipsUntilMouseLeave();
-                  setIsMockMode((prev) => !prev);
-                  }}
-                  data-active={isMockMode}
-                  title={isMockMode ? "Mock mode enabled" : "Enable mock mode"}
-                >
-                  <IconClown size={21} />
-                </button>
-                <span className={styles.buttonTooltip}>
-                  {isMockMode ? "Mock mode active" : "Enable mock mode"}
-                </span>
-              </div>
-            ) : null}
 
             <div className={styles.buttonWrapper}>
               <button
@@ -5107,6 +5069,18 @@ export function PageFeedbackToolbarCSS({
                       element={pendingAnnotation.element}
                       selectedText={pendingAnnotation.selectedText}
                       computedStyles={pendingAnnotation.computedStylesObj}
+                      showVariantToggle
+                      isVariant={pendingAnnotation.kind === "variant"}
+                      onVariantChange={(isVariant) => {
+                        setPendingAnnotation((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                kind: isVariant ? "variant" : "feedback",
+                              }
+                            : prev,
+                        );
+                      }}
                       placeholder={
                         pendingAnnotation.kind === "variant"
                           ? "What variants do you want?"

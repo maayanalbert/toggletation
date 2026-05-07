@@ -2,5 +2,4 @@ node_modules/.claude/settings.local.json
 node_modules
 mcp/dist
 package/simple-react/dist
-package/simple-react
 .DS_Store

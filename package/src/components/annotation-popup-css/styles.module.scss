@@ -229,6 +229,83 @@
 }
 
 // =============================================================================
+// Variant toggle (pending add only)
+// =============================================================================
+
+.variantWrapper {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+}
+
+.variantToggle {
+  --variant-accent: var(--agentation-color-blue);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.variantInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+}
+
+.variantSwitch {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.variantSwitch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease;
+}
+
+/* checked */
+.variantInput:checked + .variantSwitch {
+  background: color-mix(in srgb, var(--variant-accent) 65%, rgba(255, 255, 255, 0.12));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--variant-accent) 55%, rgba(255, 255, 255, 0.12));
+}
+
+.variantInput:checked + .variantSwitch::after {
+  transform: translateX(16px);
+}
+
+/* focus */
+.variantInput:focus-visible + .variantSwitch {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    0 0 0 2px color-mix(in srgb, var(--variant-accent) 35%, transparent);
+}
+
+.variantLabel {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 0.15s ease;
+}
+
+// =============================================================================
 // Textarea
 // =============================================================================
 
@@ -397,6 +474,25 @@
   .quote {
     color: rgba(0, 0, 0, 0.55);
     background: rgba(0, 0, 0, 0.04);
+  }
+
+  .variantSwitch {
+    background: rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+  }
+
+  .variantSwitch::after {
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+  }
+
+  .variantInput:checked + .variantSwitch {
+    background: color-mix(in srgb, var(--variant-accent) 65%, rgba(0, 0, 0, 0.08));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--variant-accent) 55%, rgba(0, 0, 0, 0.12));
+  }
+
+  .variantLabel {
+    color: rgba(0, 0, 0, 0.6);
   }
 
   .textarea {
